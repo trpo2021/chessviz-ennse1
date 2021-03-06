@@ -1,3 +1,5 @@
-chessviz: chess.cpp
-	 g++ -o main -Wall -Werror chess.cpp
-	 ./main
+chess: chess.cpp
+	 g++ -o chess -Wall -Werror chess.cpp
+
+runChess:
+	 ./chess
