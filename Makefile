@@ -30,10 +30,3 @@ clean:
 	rm obj/src/*/*.o
 	rm bin/chess
 	rm obj/src/libchessviz/libchessviz.a
-=======
-chess: chess.cpp
-	 g++ -o chess -Wall -Werror chess.cpp
-
-runChess:
-	 ./chess
->>>>>>> 2acfb405b26113a14b257ca7e8a978b6163d2e68
