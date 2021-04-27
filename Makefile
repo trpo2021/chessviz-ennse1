@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 bin/chess: obj/src/chessviz/main.o obj/src/libchessviz/libchessviz.a obj/src/chessviz/board_read.o
 	gcc -Wall -Werror -o bin/chess obj/src/chessviz/main.o obj/src/libchessviz/libchessviz.a obj/src/chessviz/board_read.o
 	
@@ -29,3 +30,10 @@ clean:
 	rm obj/src/*/*.o
 	rm bin/chess
 	rm obj/src/libchessviz/libchessviz.a
+=======
+chess: chess.cpp
+	 g++ -o chess -Wall -Werror chess.cpp
+
+runChess:
+	 ./chess
+>>>>>>> 2acfb405b26113a14b257ca7e8a978b6163d2e68
