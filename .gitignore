@@ -1,1 +1,8 @@
-main
+<<<<<<< HEAD
+bin/chess
+obj/*
+*.o
+*.a
+=======
+chess
+>>>>>>> 2acfb405b26113a14b257ca7e8a978b6163d2e68
