@@ -1,70 +1,29 @@
-APP_NAME = chessviz
-LIB_NAME = libchessviz
-TEST_APP_NAME = chessviz-test
+all: bin/chess
 
-CC = gcc
-RM = rm -rf
+bin/chess: obj/src/chessviz/main.o obj/src/libchessviz/libchessviz.a obj/src/chessviz/board_read.o
+	gcc -Wall -Werror -o bin/chess obj/src/chessviz/main.o obj/src/libchessviz/libchessviz.a obj/src/chessviz/board_read.o
+	
+obj/src/chessviz/main.o: src/chessviz/main.c
+	gcc -I src -Wall -Werror -c -o obj/src/chessviz/main.o src/chessviz/main.c
+	
+obj/src/chessviz/board_read.o: src/chessviz/board_read.c
+	gcc -I src -Wall -Werror -c -o obj/src/chessviz/board_read.o src/chessviz/board_read.c
+	
+obj/src/libchessviz/libchessviz.a: obj/src/libchessviz/board.o obj/src/libchessviz/board_print_plain.o obj/src/libchessviz/move.o
+	ar rcs obj/src/libchessviz/libchessviz.a obj/src/libchessviz/board.o obj/src/libchessviz/board_print_plain.o obj/src/libchessviz/move.o
+	
+obj/src/libchessviz/board.o: src/libchessviz/board.c
+	gcc -I src -Wall -Werror -c -o obj/src/libchessviz/board.o src/libchessviz/board.c
+	
+obj/src/libchessviz/board_print_plain.o: src/libchessviz/board_print_plain.c
+	gcc -I src -Wall -Werror -c -o obj/src/libchessviz/board_print_plain.o src/libchessviz/board_print_plain.c
+	
+obj/src/libchessviz/move.o: src/libchessviz/move.c
+	gcc -I src -Wall -Werror -c -o obj/src/libchessviz/move.o src/libchessviz/move.c
+	
 
-CFLAGS = -Wall -Wextra -Werror -std=c11
-CPPFLAGS = -I src -MP -MMD
-CPPFLAGS_TEST = -I src -I thirdparty -MP -MMD
-LDFLAGS =
-LDLIBS =
+.PHONY: all install uninstall clean
 
-BIN_DIR = bin
-OBJ_DIR = obj
-SRC_DIR = src
-TEST_DIR = test
-
-APP_PATH = $(BIN_DIR)/$(APP_NAME)
-LIB_PATH = $(OBJ_DIR)/$(SRC_DIR)/$(LIB_NAME)/$(LIB_NAME).a
-TEST_APP_PATH = $(BIN_DIR)/$(TEST_APP_NAME)
-
-SRC_EXT = c
-
-APP_SOURCES = $(shell find $(SRC_DIR)/$(APP_NAME) -name '*.$(SRC_EXT)')
-APP_OBJECTS = $(APP_SOURCES:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(SRC_DIR)/%.o)
-
-LIB_SOURCES = $(shell find $(SRC_DIR)/$(LIB_NAME) -name '*.$(SRC_EXT)')
-LIB_OBJECTS = $(LIB_SOURCES:$(SRC_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(SRC_DIR)/%.o)
-
-TEST_APP_SOURCES = $(shell find $(TEST_DIR) -name '*.$(SRC_EXT)')
-TEST_APP_OBJECTS = $(TEST_APP_SOURCES:$(TEST_DIR)/%.$(SRC_EXT)=$(OBJ_DIR)/$(TEST_DIR)/%.o)
-
-DEPS = $(APP_OBJECTS:.o=.d) $(LIB_OBJECTS:.o=.d)
-TEST_DEPS = $(TEST_APP_OBJECTS:.o=.d) $(LIB_OBJECTS:.o=.d)
-
-.PHONY: all
-all: $(APP_PATH)
-
--include $(DEPS)
-
-$(APP_PATH): $(APP_OBJECTS) $(LIB_PATH)
-	$(CC) $(CFLAGS) $(CPPFLAGS) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-
-$(LIB_PATH): $(LIB_OBJECTS)
-	ar rcs $@ $^
-
-$(OBJ_DIR)/$(SRC_DIR)/$(APP_NAME)/%.o: $(SRC_DIR)/$(APP_NAME)/%.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
-
-$(OBJ_DIR)/$(SRC_DIR)/$(LIB_NAME)/%.o: $(SRC_DIR)/$(LIB_NAME)/%.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS) $< -o $@
-
-.PHONY: test
-test: $(TEST_APP_PATH)
-	./$(TEST_APP_PATH)
-
--include $(TEST_DEPS)
-
-$(TEST_APP_PATH): $(TEST_APP_OBJECTS) $(LIB_PATH)
-	$(CC) $(CFLAGS) $(CPPFLAGS_TEST) $^ -o $@ $(LDFLAGS) $(LDLIBS)
-
-$(OBJ_DIR)/$(TEST_DIR)/%.o: $(TEST_DIR)/%.c
-	$(CC) -c $(CFLAGS) $(CPPFLAGS_TEST) $< -o $@
-
-.PHONY: clean
 clean:
-	$(RM) $(APP_PATH) $(LIB_PATH) $(TEST_APP_PATH)
-	find $(OBJ_DIR) -name '*.o' -exec $(RM) '{}' \;
-	find $(OBJ_DIR) -name '*.d' -exec $(RM) '{}' \;
+	rm obj/src/*/*.o
+	rm bin/ches
